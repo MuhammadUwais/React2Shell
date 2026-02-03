@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "RSC Sentinal",
+  "name": "RSC Sentinel",
   "version": "1.0",
   "description": "Detects React Server Components (RSC) and Next.js App Router fingerprints.",
 
@@ -38,17 +38,15 @@
   },
 
   "icons": {
-    "48": "images/img2.png",
-    "96": "images/img2.png"
+    "48": "images/img2.png"
   },
 
   "action": {
     "default_icon": {
-      "48": "images/img2.png",
-      "96": "images/img2.png"
+      "48": "images/img2.png"
     },
     "default_popup": "popup.html",
-    "default_title": "RSC Sentinal"
+    "default_title": "RSC Sentinel"
   },
 
   "content_scripts": [

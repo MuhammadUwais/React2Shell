@@ -6,7 +6,7 @@
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "rsc-fingerprint-detector@example.com",
+      "id": "{d2b9c4f1-1f3e-4c1e-b9b7-3c91b3d1a2fa}",
       "data_collection_permissions": {
         "required": ["none"]
       }

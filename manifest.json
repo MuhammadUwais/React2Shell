@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "RSC Sentinal",
+  "version": "1.0",
+  "description": "Detects React Server Components (RSC) and Next.js App Router fingerprints.",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "rsc-fingerprint-detector@example.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "declarativeNetRequest"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "icons": {
+    "48": "images/img2.png",
+    "96": "images/img2.png"
+  },
+
+  "action": {
+    "default_icon": {
+      "48": "images/img2.png",
+      "96": "images/img2.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "RSC Sentinal"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

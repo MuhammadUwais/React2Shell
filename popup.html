@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RSC Sentinel</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --blue: #60a5fa;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      width: 380px;
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1000px 600px at 20% -10%, rgba(96,165,250,.22), transparent 55%),
+                  radial-gradient(900px 600px at 90% 0%, rgba(34,197,94,.14), transparent 55%),
+                  linear-gradient(180deg, #060b16 0%, #0b1220 100%);
+    }
+
+    /* Header */
+    .topbar{
+      padding: 14px 16px 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .logo{
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.25);
+    }
+    .brand h1{
+      font-size: 14px;
+      margin: 0;
+      letter-spacing: .2px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    .brand p{
+      margin: 2px 0 0 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Layout */
+    .wrap{
+      padding: 12px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Cards */
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-h{
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .card-h .title{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .chip{
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .hlabel{
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .subtle{
+      font-size: 11px;
+      color: var(--muted2);
+      margin: 2px 0 0 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-b{
+      padding: 10px 12px 12px 12px;
+    }
+
+    /* Status badge */
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+    .dot{ width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); }
+    .status.good{ color: rgba(34,197,94,.95); border-color: rgba(34,197,94,.28); background: rgba(34,197,94,.08); }
+    .status.good .dot{ background: rgba(34,197,94,.9); }
+    .status.bad{ color: rgba(239,68,68,.95); border-color: rgba(239,68,68,.30); background: rgba(239,68,68,.08); }
+    .status.bad .dot{ background: rgba(239,68,68,.9); }
+    .status.warn{ color: rgba(245,158,11,.95); border-color: rgba(245,158,11,.30); background: rgba(245,158,11,.08); }
+    .status.warn .dot{ background: rgba(245,158,11,.9); }
+
+    /* Lists */
+    ul{
+      margin: 0;
+      padding: 0 0 0 18px;
+      color: rgba(255,255,255,.86);
+      line-height: 1.5;
+      font-size: 12px;
+    }
+    li{ margin: 3px 0; }
+    .passive-alert{
+      color: var(--bad);
+    }
+    .active-alert{
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* Buttons */
+    .btn{
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      letter-spacing: .2px;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(96,165,250,.95), rgba(59,130,246,.75));
+      border-color: rgba(96,165,250,.35);
+    }
+    .btn.primary:hover{ background: linear-gradient(135deg, rgba(96,165,250,1), rgba(59,130,246,.85)); }
+
+    .btn.danger{
+      background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(220,38,38,.75));
+      border-color: rgba(239,68,68,.35);
+    }
+    .btn.danger:hover{ background: linear-gradient(135deg, rgba(239,68,68,1), rgba(220,38,38,.85)); }
+    .btn:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    /* Command row */
+    .row{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .input{
+      flex: 1;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-size: 12px;
+      outline: none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+    .input:focus{
+      border-color: rgba(96,165,250,.5);
+      box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+    }
+
+    /* Toggle row */
+    .toggle-row{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      background: rgba(0,0,0,.2);
+    }
+    .toggle-copy{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toggle-label{
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .toggle-meta{
+      font-size: 10px;
+      color: var(--muted2);
+    }
+    .waf-status.danger{
+      color: var(--bad);
+      font-weight: 700;
+    }
+    .toggle{
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle input{
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider{
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(255,255,255,.18);
+      border-radius: 999px;
+      transition: background-color .2s ease;
+      border: 1px solid rgba(255,255,255,.25);
+    }
+    .toggle-slider::before{
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform .2s ease;
+    }
+    .toggle input:checked + .toggle-slider{
+      background-color: rgba(96,165,250,.8);
+    }
+    .toggle input:checked + .toggle-slider::before{
+      transform: translateX(18px);
+    }
+
+    /* Result box */
+    .result{
+      margin-top: 10px;
+      display:none;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 10px;
+    }
+    .console{
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: rgba(255,255,255,.90);
+    }
+    .hint{
+      font-size: 11px;
+      color: var(--muted2);
+      margin-top: 8px;
+    }
+    .tiny{
+      font-size: 10px;
+      color: var(--muted2);
+    }
+
+    /* Section accents */
+    .accent-blue{ border-left: 3px solid rgba(96,165,250,.8); }
+    .accent-red{ border-left: 3px solid rgba(239,68,68,.8); }
+    .accent-green{ border-left: 3px solid rgba(34,197,94,.8); }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <img class="logo" src="images/img2.png" alt="JS logo" />
+      <div>
+        <h1>RSC Sentinel</h1>
+        <p>RSC & App Router signals • Request probe utilities</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- 1) Passive -->
+    <div class="card accent-green">
+      <div class="card-h">
+        <div class="title">
+          <div>
+            <div class="hlabel">Passive Signals</div>
+            <div class="subtle">Static indicators from the current page</div>
+          </div>
+        </div>
+
+        <!-- Keep this ID for popup.js -->
+        <div id="passive-badge" class="status warn">
+          <span class="dot"></span>
+          <span>SCANNING</span>
+        </div>
+      </div>
+
+      <div class="card-b">
+        <!-- Keep this ID for popup.js -->
+        <ul id="passive-list">
+          <li>Waiting for page…</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2) Active fingerprint -->
+    <div class="card accent-blue">
+      <div class="card-h">
+        <div class="title">
+          <div>
+            <div class="hlabel">Active Probe</div>
+            <div class="subtle">Controlled request to evaluate RSC behavior</div>
+          </div>
+        </div>
+        <span class="chip">RSC: 1</span>
+      </div>
+
+      <div class="card-b">
+        <!-- Keep this ID for popup.js -->
+        <button id="btnFingerprint" class="btn primary">Run fingerprint probe</button>
+
+        <!-- Keep this ID for popup.js -->
+        <div id="fingerprint-result" class="result">
+          <ul id="active-list"></ul>
+        </div>
+
+        <div class="hint">Tip: Run this after the page fully loads.</div>
+      </div>
+    </div>
+
+    <!-- 3) Execute -->
+    <div class="card accent-red">
+      <div class="card-h">
+        <div class="title">
+          <div>
+            <div class="hlabel">Command Execution</div>
+            <div class="subtle">Send a command and display returned output</div>
+          </div>
+        </div>
+        <span class="chip">Manual</span>
+      </div>
+
+      <div class="card-b">
+        <div class="row">
+          <!-- Keep this ID for popup.js -->
+          <input id="cmdInput" class="input" type="text" value="whoami" placeholder="Command (e.g., whoami)" />
+          <!-- Keep this ID for popup.js -->
+          <button id="btnExploit" class="btn danger" style="width: 120px;">Execute</button>
+        </div>
+
+        <div id="waf-toggle-row" class="toggle-row">
+          <div class="toggle-copy">
+            <span class="toggle-label">WAF BYPASS</span>
+            <span id="waf-status" class="toggle-meta waf-status">No WAF detected</span>
+          </div>
+          <label class="toggle">
+            <input id="waf-toggle" type="checkbox" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Keep this ID for popup.js -->
+        <div id="exploit-status" class="tiny" style="display:none; margin-top:8px;">
+          Sending request…
+        </div>
+
+        <!-- Keep this ID for popup.js -->
+        <div id="exploit-result" class="result">
+          <div id="rce-output" class="console"></div>
+        </div>
+
+        <div class="hint">Only use on systems you own or have explicit permission to test.</div>
+      </div>
+    </div>
+
+    <div class="tiny" style="text-align:center; padding: 6px 0 12px 0;">
+      v1.0 • UI refresh
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

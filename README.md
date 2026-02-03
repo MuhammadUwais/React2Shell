@@ -1,5 +1,7 @@
 # RSC Sentinel
 
+CVE-2025-55182 Next.js / React Server Components RCE Scanner (Firefox Extension)
+
 ## 👁️ Overview
 RSC Sentinel is a Firefox browser extension for security researchers and educators who want to observe React Server Components (RSC) and Next.js App Router indicators while browsing. It focuses on passive detection by default, highlighting potential signals without altering site behavior. For authorized assessments, it also offers optional manual tools for active probing and controlled command execution initiated by the user.
 
